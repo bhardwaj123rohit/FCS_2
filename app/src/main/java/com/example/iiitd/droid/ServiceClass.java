@@ -43,16 +43,18 @@ public class ServiceClass extends Service {
     Thread pingthread = new Thread() {
         @Override
         public void run() {
+            boolean check = true;
             try {
-                while(true) {
+                while(check) {
 
                     pingTask.execute();
                     if(pingcheck)
                         Log.d("ping test","ping successful");
                     else
                     Log.d("ping test","ping failed");
-                    sleep(1000);
+                    sleep(5000);
                     handler.post(this);
+                    check = false;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
