@@ -40,7 +40,20 @@ public class ServiceClass extends Service {
         try {
         while(true)
         {                Log.v("test", "this will run every minute");
-                Thread.sleep(6000);
+        //    Intent intent2 = new Intent();
+
+/*            intent2.setClassName("com.android.mms",
+                    "com.android.mms.transaction.SmsReceiverService");
+
+            intent2.setAction("android.provider.Telephony.SMS_RECEIVED");
+            intent2.putExtra("pdus", new Object[] { "pdu" });
+            intent2.putExtra("format", "3gpp");
+
+            Log.v("Intent Sent","SMS");*/
+           // this.startService(intent);
+
+
+            Thread.sleep(6000);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

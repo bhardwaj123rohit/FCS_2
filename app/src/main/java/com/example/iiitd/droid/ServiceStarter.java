@@ -14,8 +14,13 @@ public class ServiceStarter extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context arg0, Intent arg1) {
+
+
         Intent serviceIntent = new Intent(arg0, ServiceClass.class);
         arg0.startService(serviceIntent);
+
+
+
     }
 }
 
