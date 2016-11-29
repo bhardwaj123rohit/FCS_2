@@ -7,9 +7,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.iiitd.droid.model.PingTask;
+import com.example.iiitd.droid.model.PingTheTarget;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static android.view.View.Z;
+
 public class ServiceClass extends Service {
+
+
+
+    public static String target = "example.com";
+    public static boolean pingcheck = false;
 
     /** indicates how to behave if the service is killed */
     //final Handler handler = new Handler();;
@@ -24,6 +38,27 @@ public class ServiceClass extends Service {
 
     /** indicates whether onRebind should be used */
     boolean mAllowRebind;
+    PingTask pingTask = new PingTask();
+
+    Thread pingthread = new Thread() {
+        @Override
+        public void run() {
+            try {
+                while(true) {
+
+                    pingTask.execute();
+                    if(pingcheck)
+                        Log.d("ping test","ping successful");
+                    else
+                    Log.d("ping test","ping failed");
+                    sleep(1000);
+                    handler.post(this);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     /** Called when the service is being created. */
     @Override
@@ -32,6 +67,8 @@ public class ServiceClass extends Service {
 
 
     }
+
+
 
     /** The service is starting, due to a call to startService() */
     @Override
@@ -52,8 +89,11 @@ public class ServiceClass extends Service {
             Log.v("Intent Sent","SMS");*/
            // this.startService(intent);
 
+            pingthread.run();
 
-            Thread.sleep(6000);
+            Thread.sleep(30000);
+            PingTheTarget pingTheTarget = new PingTheTarget();
+            pingTheTarget.execute();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -62,6 +102,18 @@ public class ServiceClass extends Service {
 
             return START_STICKY;
         }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+
+
+    }
+
+    public static void updateTarget(String server_response)
+    {
+        target = server_response;
+    }
 
     /** A client is binding to the service with bindService() */
     @Override
