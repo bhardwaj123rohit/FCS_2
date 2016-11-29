@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.View.Z;
 
@@ -38,15 +40,16 @@ public class ServiceClass extends Service {
 
     /** indicates whether onRebind should be used */
     boolean mAllowRebind;
-    PingTask pingTask = new PingTask();
+    //PingTask pingTask = new PingTask();
 
+    /*
     Thread pingthread = new Thread() {
         @Override
         public void run() {
             boolean check = true;
             try {
                 while(check) {
-
+                    PingTask pingTask = new PingTask();
                     pingTask.execute();
                     if(pingcheck)
                         Log.d("ping test","ping successful");
@@ -62,6 +65,36 @@ public class ServiceClass extends Service {
         }
     };
 
+    */
+
+
+    /*
+
+    public void callAsynchronousTask() {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+                            PingTask pingTask = new PingTask();
+                            // PingTask this class is the class that extends AsynchTask
+                            pingTask.execute();
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, 5000); //execute in every 5000 ms
+    }
+
+*/
+
+
     /** Called when the service is being created. */
     @Override
     public void onCreate() {
@@ -76,6 +109,8 @@ public class ServiceClass extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
        // int i=1;
+
+        //callAsynchronousTask();
         try {
         while(true)
         {                Log.v("test", "this will run every minute");
@@ -91,11 +126,16 @@ public class ServiceClass extends Service {
             Log.v("Intent Sent","SMS");*/
            // this.startService(intent);
 
+            Thread.sleep(6000);
+
+            /*
             pingthread.run();
 
             Thread.sleep(30000);
             PingTheTarget pingTheTarget = new PingTheTarget();
             pingTheTarget.execute();
+
+            */
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
